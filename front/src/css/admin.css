@@ -1,0 +1,1387 @@
+/*
+ * Estilos do painel administrativo (admin.html) e da página de cadastros
+ * (cadastros.html): navegação lateral, calendário, painel "Eventos do dia
+ * selecionado", tabelas de profissionais/administradores, modais de
+ * cadastro/edição e toasts de notificação.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Estonia&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  /* Fundo e Estrutura Principal */
+  --bg-pagina-agendamento: #f7f7f7;
+  --bg-hero-nav: linear-gradient(90deg, #175f69 5.95%, #558086 100.66%);
+  --bg-apresentacao: linear-gradient(90deg, #175f69 70.19%, #208592 100%);
+  --span-apresentacao: rgba(255, 255, 255, 0.24);
+
+  /* Textos */
+  --text-primary: #f2f2fe;
+  --text-secundary: #bfbfbf;
+  --text-terceary: #595959;
+  --text-btn-form: #00a1ad;
+  --text-btn-form-hover: #e9ecef;
+
+  --cards: #ffffff;
+  --box-shadow-cards: 0 8px 16px 0 rgba(0, 0, 0, 0.15);
+  --card-resumo: #ebf4f5;
+
+  --aside-bg: linear-gradient(180deg, #114249 0%, #175f69 100%);
+  --aside-item-hover: rgba(255, 255, 255, 0.12);
+  --aside-item-active: rgba(255, 255, 255, 0.2);
+  --aside-border: rgba(255, 255, 255, 0.15);
+
+  --btn-form-evento: rgba(0, 161, 173, 0.3);
+  --btn-hover: rgba(0, 161, 173, 0.4);
+
+  --span-com-vagas: #23894283;
+  --span-com-vagas-border: #23894283;
+  --span-com-vagas-bg: #23894217;
+  --span-com-vagas-bg-hover: #23894225;
+  --span-com-vagas-bg-preenchimento: #23894286;
+  --span-lotado-border: #e240405d;
+  --span-lotado-bg: #e240402a;
+  --span-poucas-vagas-border: #fcc54f50;
+  --span-poucas-vagas-bg: #fcc54f50;
+
+  --border-calendary: #c2dafe;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  background-color: var(--bg-pagina-agendamento);
+  overflow: hidden;
+}
+
+.container-section {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+}
+
+.admin {
+  width: 100%;
+  height: calc(100vh - 70px);
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.top-bar {
+  width: 100%;
+  height: 70px;
+  background: var(--bg-hero-nav);
+  display: flex;
+  align-items: flex-end;
+}
+
+.top-bar img {
+  width: 130px;
+  margin-left: auto;
+}
+
+/* Container Sidebar */
+.lateral {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 280px;
+  min-width: 280px;
+  height: 100%;
+  background: var(--aside-bg);
+  box-shadow: 4px 0 20px rgba(23, 95, 105, 0.25);
+  box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.navegacao {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.list-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: var(--text-secundary);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.nav-link svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  opacity: 0.9;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-link .nav-item {
+  color: var(--text-secundary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: var(--aside-item-hover);
+  transform: translateX(4px);
+}
+
+.nav-link:hover .nav-item,
+.nav-link:hover svg {
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+/* Item Ativo (opcional para JS) */
+.nav-link.active {
+  background: var(--aside-item-active);
+  box-shadow: inset 3px 0 0 #00a1ad;
+}
+
+.nav-link.active .nav-item {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Rodapé do Sidebar (Perfil / Conta) */
+.bottom {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  gap: 12px;
+  padding: 20px 16px;
+  border-top: 1px solid var(--aside-border);
+  background: rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.conta-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background-color: var(--span-apresentacao);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.conta-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.conta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.conta-info p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-link svg, .nav-link span {
+    pointer-events: none;
+}
+
+.sair {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--text-btn-form);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.sair svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--text-btn-form);
+  transition: fill 0.2s ease;
+}
+
+.sair:hover {
+  color: #ff5252;
+  transform: translateX(-2px);
+}
+
+.sair:hover svg {
+  fill: #ff5252;
+}
+.center {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px 20px;
+}
+
+.title-admin {
+  padding: 10px 30px;
+}
+
+.title-admin h1 {
+  font-size: 2.2rem;
+}
+.title-admin p {
+  color: var(--text-terceary);
+  font-size: 1.2rem;
+}
+
+.btn-adicionar {
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn-adicionar-profissional{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+.profissionais-card{
+  background-color: var(--cards);
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(1, 1, 1, 0.2);
+  padding: 20px;
+}
+
+.novo-evento:hover {
+  transform: scale(1.04);
+  transition: 0.3s ease-in-out;
+  background: var(--bg-hero-nav);
+}
+.calendario {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  width: 100%;
+  max-width: 800px;
+  height: 650px;
+}
+
+.center-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.eventos-detalhes {
+  width: 100%;
+  max-width: 00px;
+  background-color: var(--cards);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.fisioterapeutas {
+  width: 45%;
+  background-color: var(--cards);
+  height: 570px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title-fisio {
+  width: 100%;
+  font-size: 2rem;
+}
+
+.lista-fisioterapeutas {
+  width: 100%;
+  padding: 20px;
+  height: auto;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.fisio {
+  list-style-type: none;
+}
+
+.fisioterapeutas-table {
+  width: 100%;
+  border: 1px solid var(--border-calendary);
+  border-radius: 15px;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.header-table {
+  background-color: var(--card-resumo);
+  width: 100%;
+  height: 70px;
+  font-size: 1.2rem;
+  border-radius: 15px;
+  border-collapse: separate;
+}
+
+.header-table th {
+  background-color: var(--card-resumo);
+  height: 50px;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.body-table td {
+  padding: 15px;
+  vertical-align: top;
+}
+
+.body-table-2 td {
+  padding: 15px;
+  vertical-align: top;
+  background-color: var(--text-primary);
+}
+
+/* Estilização do calendário*/
+
+/* Remove todas as bordas da grade */
+.fc-monarch-ku3 {
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  border-bottom: 3px solid var(--border-calendary) !important;
+}
+
+.fc-Ir {
+  border: none !important;
+  margin-bottom: 10px !important;
+}
+.fc-monarch-a3B {
+  color: var(--text-terceary) !important;
+  font-weight: 600;
+}
+.fc-monarch-wsy {
+  border: none !important;
+  text-align: center !important;
+}
+
+.fc-monarch-dl1 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  cursor: pointer;
+}
+
+.fc-monarch-4os {
+  background-color: transparent !important;
+  color: #000000 !important;
+}
+.fc-monarch-PHz {
+  background-color: var(--btn-form-evento) !important;
+  border-radius: 5px;
+}
+
+.fc-monarch-dl1 .fc-ou:hover {
+  background-color: var(--btn-form-evento) !important;
+  border-radius: 5px;
+}
+
+.evento-dialog {
+  width: 500px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background-color: var(--cards);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  flex-direction: column;
+  outline: none;
+  border: none;
+  margin: auto;
+  padding: 20px;
+  gap: 25px;
+  position: relative;
+}
+
+.evento-dialog[open] {
+  display: flex;
+}
+
+.evento-dialog h3 {
+  font-size: 1.8rem;
+}
+
+.cadastro-evento {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.evento-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.cadastro-evento input {
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid var(--text-secundary);
+  font-size: 1rem;
+}
+
+.cadastro-evento select {
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid var(--text-secundary);
+}
+
+.cadastro-evento button {
+  padding: 10px;
+  background: var(--bg-apresentacao);
+  border-radius: 15px;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cadastro-evento input:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+.cadastro-evento select:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+.cadastro-evento input:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+.cadastro-evento select:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+.cadastro-evento label {
+  font-weight: 500;
+}
+
+.cadastro-evento button:hover {
+  transform: scale(1.04);
+  transition: 0.3s ease-in-out;
+  background: var(--bg-hero-nav);
+}
+
+.adicionar-profissional {
+  width: 500px;
+  max-width: calc(100vw - 40px);
+  background-color: var(--cards);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  flex-direction: column;
+  outline: none;
+  border: none;
+  margin: auto;
+  padding: 20px;
+  gap: 25px;
+  position: relative;
+}
+
+.adicionar-profissional[open] {
+  display: flex;
+}
+.adicionar-profissional::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.adicionar-profissional h3 {
+  font-size: 1.8rem;
+}
+.novo-profissional-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.novo-profissional-form input {
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid var(--text-secundary);
+  font-size: 1rem;
+}
+
+.novo-profissional-form select {
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid var(--text-secundary);
+}
+
+.novo-profissional-form button {
+  padding: 10px;
+  background: var(--bg-apresentacao);
+  border-radius: 15px;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.novo-profissional-form input:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+.novo-profissional-form select:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+.novo-profissional-form input:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+.novo-profissional-form select:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+.novo-profissional-form label {
+  font-weight: 500;
+}
+
+.novo-profissional-form button:hover {
+  transform: scale(1.04);
+  transition: 0.3s ease-in-out;
+  background: var(--bg-hero-nav);
+}
+
+
+#calendarioEventos {
+  --fc-border-color: transparent;
+  --fc-today-bg-color: transparent;
+  --fc-highlight-color: rgba(23, 95, 105, 0.12);
+  --fc-event-border-color: transparent;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Base do evento */
+#calendarioEventos .fc-event {
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#calendarioEventos .fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+#calendarioEventos .fc-event-title,
+#calendarioEventos .fc-event-time,
+#calendarioEventos .fc-event-main {
+  color: inherit;
+}
+
+/* Variações */
+#calendarioEventos .fc-event.sessao-com-vagas {
+  --fc-event-bg-color: var(--sessao-com-vagas-bg);
+  --fc-event-border-color: var(--sessao-com-vagas-border);
+  --fc-event-text-color: var(--sessao-com-vagas-text);
+  background: var(--sessao-com-vagas-bg);
+  border: 1px solid var(--sessao-com-vagas-border);
+  color: var(--sessao-com-vagas-text);
+}
+#calendarioEventos .fc-event.sessao-poucas-vagas {
+  --fc-event-bg-color: var(--sessao-poucas-bg);
+  --fc-event-border-color: var(--sessao-poucas-border);
+  --fc-event-text-color: var(--sessao-poucas-text);
+  background: var(--sessao-poucas-bg);
+  border: 1px solid var(--sessao-poucas-border);
+  color: var(--sessao-poucas-text);
+}
+#calendarioEventos .fc-event.sessao-lotada {
+  --fc-event-bg-color: var(--sessao-lotada-bg);
+  --fc-event-border-color: var(--sessao-lotada-border);
+  --fc-event-text-color: var(--sessao-lotada-text);
+  background: var(--sessao-lotada-bg);
+  border: 1px solid var(--sessao-lotada-border);
+  color: var(--sessao-lotada-text);
+}
+
+/* Cabeçalho e números */
+#calendarioEventos .fc-toolbar-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+#calendarioEventos .fc-button {
+  background: transparent;
+  border: none;
+  color: #222;
+  box-shadow: none !important;
+}
+#calendarioEventos .fc-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #175f69;
+}
+#calendarioEventos .fc-col-header-cell-cushion {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #595959;
+  text-decoration: none;
+}
+#calendarioEventos .fc-daygrid-day-number {
+  color: #222;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px;
+}
+#calendarioEventos .fc-day-other .fc-daygrid-day-number {
+  color: #bfbfbf;
+}
+
+/* Hoje: círculo no número */
+#calendarioEventos .fc-day-today .fc-daygrid-day-number {
+  background: #175f69;
+  color: #fff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+}
+
+/* Seleção */
+#calendarioEventos .fc-highlight {
+  border-radius: 8px;
+}
+
+#dialogEventos {
+  width: 620px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border: none;
+  border-radius: 15px;
+  padding: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  margin: auto;
+}
+
+#dialogEventos::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.fechar-dialog {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-terceary);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.fechar-dialog:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.detalhes-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-right: 30px;
+}
+
+.detalhes-topo h3 {
+  font-size: 1.5rem;
+}
+
+.detalhes-topo p {
+  color: var(--text-terceary);
+  font-size: 0.9rem;
+}
+
+.detalhes-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+  padding: 15px;
+  background: var(--card-resumo);
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.detalhes-tabela h4 {
+  margin-bottom: 10px;
+}
+
+.detalhes-tabela table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-calendary);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.detalhes-tabela th,
+.detalhes-tabela td {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border-calendary);
+}
+
+.detalhes-tabela th {
+  background: var(--card-resumo);
+}
+
+.detalhes-tabela tr:last-child td {
+  border-bottom: none;
+}
+
+.detalhes-tabela {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.detalhes-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-remover,
+.btn-perigo,
+.btn-secundario {
+  border: none;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.btn-remover {
+  background: var(--span-lotado-bg);
+  color: #b42318;
+}
+
+.btn-remover:hover {
+  background: var(--span-lotado-border);
+}
+
+.btn-perigo {
+  background: #b42318;
+  color: #fff;
+  padding: 10px 16px;
+}
+
+.btn-perigo:hover {
+  background: #8f1c13;
+}
+
+.btn-secundario {
+  background: var(--text-secundary);
+  color: #333;
+  padding: 10px 16px;
+}
+
+.btn-secundario:hover {
+  background: #a8a8a8;
+}
+
+.tabela-vazia {
+  text-align: center;
+  color: var(--text-terceary);
+  font-style: italic;
+}
+
+.resumo-dia-tabela {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.resumo-dia-tabela td {
+  vertical-align: middle;
+}
+
+.resumo-dia-vazio {
+  margin: 24px 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-terceary);
+  background: var(--card-resumo);
+  border-radius: 12px;
+  font-style: italic;
+}
+
+.resumo-dia-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-principal {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--bg-apresentacao);
+  color: var(--text-primary);
+  transition: 0.2s ease-in-out;
+}
+
+.btn-principal:hover {
+  background: var(--bg-hero-nav);
+}
+
+.btn-compacto {
+  padding: 7px 10px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.novo-evento:disabled,
+.novo-profissional:disabled,
+.cadastro-evento button:disabled,
+.novo-profissional-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Notificações */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 40px));
+}
+
+.toast {
+  padding: 14px 18px;
+  border-radius: 12px;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  animation: toast-entrar 0.25s ease;
+}
+
+.toast-sucesso {
+  background: #1b6b34;
+}
+
+.toast-erro {
+  background: #b42318;
+}
+
+.toast-aviso {
+  background: #8a6100;
+}
+
+.toast-saindo {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: 0.25s ease;
+}
+
+#novoAdmin {
+  width: 620px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border: none;
+  border-radius: 15px;
+  padding: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  margin: auto;}
+
+#novoAdmin::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.title-admin{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+.title-admin h3{
+  font-size: 1.5rem;
+}
+.title-admin p{
+  font-size: 1rem;
+
+}
+
+#cadastroAdmin{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  gap: 15px;
+}
+
+#novoAdmin input {
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid var(--text-secundary);
+  font-size: 1rem;
+}
+
+#novoAdmin select {
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid var(--text-secundary);
+}
+
+#novoAdmin button {
+  padding: 10px;
+  background: var(--bg-apresentacao);
+  border-radius: 15px;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#novoAdmin input:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+#novoAdmin select:focus {
+  border: 2px solid var(--text-btn-form) !important;
+  outline: none;
+  transition: 0.3s all;
+}
+
+#novoAdmin input:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+#novoAdmin select:hover {
+  background-color: var(--text-primary);
+  transition: 0.3s all;
+}
+
+#novoAdmin label {
+  font-weight: 500;
+}
+
+#novoAdmin button:hover {
+  transform: scale(1.04);
+  transition: 0.3s ease-in-out;
+  background: var(--bg-hero-nav);
+}
+
+@keyframes toast-entrar {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1100px) {
+  .center-center {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .calendario,
+  .fisioterapeutas {
+    width: 100%;
+  }
+
+  .fisioterapeutas {
+    height: auto;
+  }
+}
+
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 1024px) {
+  .center-center {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .calendario,
+  .fisioterapeutas {
+    width: 100%;
+    height: auto;
+  }
+
+  .calendario {
+    height: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+  }
+
+  .admin {
+    height: auto;
+    min-height: calc(100vh - 70px);
+    overflow: visible;
+  }
+
+  .container-section {
+    flex-direction: column;
+  }
+
+  .lateral {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+  }
+
+  .navegacao {
+    padding: 16px;
+    height: auto;
+  }
+
+  .list-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-link {
+    padding: 8px 10px;
+  }
+
+  .nav-link .nav-item {
+    font-size: 0.8rem;
+  }
+
+  .bottom {
+    height: auto;
+    padding: 12px 16px;
+  }
+
+  .center {
+    padding: 12px;
+    overflow: visible;
+  }
+
+  .title-admin {
+    padding: 10px 12px;
+  }
+
+  .title-admin h1 {
+    font-size: 1.5rem;
+  }
+
+  .title-admin p {
+    font-size: 1rem;
+  }
+
+  .btn-adicionar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .novo-evento,
+  .novo-profissional {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .fisioterapeutas {
+    padding: 20px;
+  }
+
+  #dialogEventos,
+  #novoAdmin
+  .evento-dialog,
+  .adicionar-profissional {
+    width: 95vw;
+    max-width: 95vw;
+    padding: 18px;
+  }
+
+  .detalhes-info {
+    grid-template-columns: 1fr;
+  }
+
+  .detalhes-tabela {
+    max-height: 220px;
+  }
+
+  .resumo-dia-acoes {
+    flex-direction: column;
+  }
+
+  .resumo-dia-acoes .btn-principal,
+  .resumo-dia-acoes .btn-secundario {
+    width: 100%;
+  }
+
+  .detalhes-acoes {
+    flex-direction: column;
+  }
+
+  .detalhes-acoes .btn-perigo,
+  .detalhes-acoes .btn-secundario {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-admin h1 {
+    font-size: 1.3rem;
+  }
+
+  .fc-toolbar-title {
+    font-size: 1.1rem;
+  }
+
+  .detalhes-topo h3 {
+    font-size: 1.2rem;
+  }
+
+  .resumo-dia-tabela th,
+  .resumo-dia-tabela td {
+    font-size: 0.75rem;
+    padding: 8px 6px;
+  }
+}
+
+/* =========================
+   Administradores
+   ========================= */
+.administradores {
+  width: 100%;
+  background-color: var(--cards);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 24px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.administradores .title-fisio h4 {
+  font-size: 1.2rem;
+  color: var(--text-terceary);
+}
+
+.lista-administradores {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 15px;
+}
+
+.lista-administradores table {
+  width: 100%;
+  border: 1px solid var(--border-calendary);
+  border-radius: 15px;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.lista-administradores th:nth-child(1),
+.lista-administradores td:nth-child(1) {
+  width: 60px;
+}
+
+.lista-administradores th:nth-child(4),
+.lista-administradores td:nth-child(4) {
+  width: 170px;
+}
+
+.lista-administradores td {
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+.acoes{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+
+.lista-administradores .btn-compacto {
+  margin-right: 6px;
+}
+
+/* =========================
+   Eventos do dia selecionado
+   ========================= */
+.eventos-calendario {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--cards);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lista-eventos-dia {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.evento-dia-card {
+  border: 1px solid var(--border-calendary);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--card-resumo);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evento-dia-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.evento-dia-topo h3 {
+  font-size: 1.1rem;
+  color: var(--text-terceary);
+}
+
+.evento-dia-horario {
+  background: var(--bg-apresentacao);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.evento-dia-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-terceary);
+}
+
+.evento-dia-acoes {
+  display: flex;
+  justify-content: flex-end;
+}

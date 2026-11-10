@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: ./api-node
+    image: api_agendamento
+    container_name: container_agendamento_api
+    ports:
+      - "3025:3025"
+    volumes:
+      - agendamento_dados:/app/data
+    environment:
+      - ADMIN_NOME=${ADMIN_NOME}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DATA_FILE=/app/data/dados.json
+    restart: unless-stopped
+
+  front:
+    build:
+      context: ./front
+    image: front_agendamento
+    container_name: container_agendamento_front
+    ports:
+      - "3065:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+# Volume nomeado que guarda o dados.json (o "banco de dados" da API).
+# Persiste entre rebuilds e `docker compose down`; só é apagado com
+# `docker compose down -v` ou `docker volume rm`.
+volumes:
+  agendamento_dados:

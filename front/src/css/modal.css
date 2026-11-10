@@ -1,0 +1,78 @@
+.app-modal {
+  width: min(460px, calc(100vw - 40px));
+  border: none;
+  border-radius: 15px;
+  padding: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  background: var(--cards, #ffffff);
+  margin: auto;
+}
+
+.app-modal[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.app-modal-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app-modal-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-modal-topo h3 {
+  font-size: 1.3rem;
+}
+
+.app-modal-mensagem {
+  color: var(--text-terceary, #595959);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.app-modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.app-modal .btn-principal,
+.app-modal .btn-secundario,
+.app-modal .btn-perigo {
+  min-width: 100px;
+}
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 480px) {
+/*
+ * Estilos do dialog genérico criado em src/js/lib/modal.js
+ * (substituto do alert/confirm): .app-modal com título, mensagem,
+ * botões de ação e variantes de tipo (info/erro/aviso/confirmacao).
+ */
+.app-modal {
+    width: calc(100vw - 24px);
+    padding: 20px;
+  }
+
+  .app-modal-acoes {
+    flex-direction: column;
+  }
+
+  .app-modal-acoes button {
+    width: 100%;
+  }
+}

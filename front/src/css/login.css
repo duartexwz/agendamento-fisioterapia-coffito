@@ -1,0 +1,227 @@
+/*
+ * Estilos da tela de login (login.html): cartão centralizado sobre o
+ * gradiente institucional, campos do formulário e botão de acesso.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg-pagina: #f7f7f7;
+  --bg-hero: linear-gradient(135deg, #114249 0%, #175f69 50%, #558086 100%);
+  --cards: #ffffff;
+  --text-primary: #f2f2fe;
+  --text-secondary: #bfbfbf;
+  --text-tertiary: #595959;
+  --btn-primary: #175f69;
+  --btn-primary-hover: #114249;
+  --border: #c2dafe;
+  --shadow: 0 24px 60px rgba(17, 66, 73, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Poppins", "Inter", sans-serif;
+  background: var(--bg-pagina);
+  color: #222;
+}
+
+.login-pagina {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.login-fundo {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-hero);
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 0 100%);
+}
+
+.login-card {
+  position: relative;
+  width: min(460px, 100%);
+  background: var(--cards);
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: entrar 0.45s ease-out;
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-marca {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.login-marca img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.login-kicker {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--btn-primary);
+}
+
+.login-marca h1 {
+  font-size: 1.6rem;
+  margin-top: 4px;
+  color: #1f2937;
+}
+
+.login-marca p {
+  margin-top: 4px;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid #d1d5db;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--btn-primary);
+  box-shadow: 0 0 0 4px rgba(23, 95, 105, 0.12);
+}
+
+.campo-com-icone {
+  position: relative;
+}
+
+.campo-senha .botao-ver-senha {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--btn-primary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.campo-senha .botao-ver-senha:hover {
+  background: rgba(23, 95, 105, 0.08);
+}
+
+.botao-entrar {
+  margin-top: 8px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--btn-primary);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.botao-entrar:hover {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+
+.botao-entrar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-rodape {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+}
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 768px) {
+  .login-fundo {
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-pagina {
+    padding: 16px;
+  }
+
+  .login-card {
+    padding: 28px 20px;
+    border-radius: 18px;
+    gap: 22px;
+  }
+
+  .login-marca {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .login-marca img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .login-marca h1 {
+    font-size: 1.4rem;
+  }
+}

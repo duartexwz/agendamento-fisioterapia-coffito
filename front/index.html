@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="./src/css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/skeleton.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/themes/monarch/theme.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/themes/monarch/palettes/purple.css" rel="stylesheet">
+
+    <!-- FULLCALENDAR -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/all/global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/themes/monarch/global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.3/locales/pt-br/global.js"></script>
+
+    <!-- PONTO DE ENTRADA DA PÁGINA PÚBLICA -->
+    <script type="module" src="./src/js/ui/page.js"></script>
+
+    <title>Agendamento Fisioterapia</title>
+</head>
+
+<body>
+    <header>
+        <nav class="top-bar">
+            <img src="./src/assets/coffito-nova-logo.webp"
+                alt="Logo Conselho Federal de Fisioterapia e Terapia Ocupacional">
+        </nav>
+    </header>
+
+    <main>
+        <section id="calendario">
+            <div class="container-section">
+                <div class="apresentacao">
+                    <div class="introducao-texto">
+                        <span>AGENDAMENTO ONLINE</span>
+                        <h1>Fisioterapia Coffito</h1>
+                        <p>Sua saúde não pode esperar. Escolha uma data, veja as sessões disponíveis e garanta sua
+                            vaga em poucos passos.</p>
+                    </div>
+                    <div class="imagem-intro">
+                        <img src="./src/assets/hero-section.webp" alt="Imagem de Fisioterapia">
+                    </div>
+                </div>
+
+                <div class="eventos">
+                    <div class="calendario-eventos">
+                        <div class="calendario" id="calendarioEventos"></div>
+
+                        <div class="informativos">
+                            <span class="com-vagas">
+                                <span class="circle"></span>Com vagas
+                            </span>
+                            <span class="lotado">
+                                <span class="circle"></span>Lotado
+                            </span>
+                            <span class="hoje">
+                                <span class="circle"></span>Hoje
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="eventos-dia">
+                        <div class="title-dia">
+                            <div class="title-dia-text">
+                                <h3>Eventos do dia</h3>
+                                <p id="dataDiaSelecionado"></p>
+                            </div>
+                            <span class="sessao" id="sessao">0 Sessões</span>
+                        </div>
+
+                        <div class="nav-sessoes" id="spanSessoesDia" aria-label="Filtrar por modalidade"></div>
+
+                        <div class="horarios" id="horarios" aria-live="polite"></div>
+                    </div>
+
+                    <div class="seus-dados">
+                        <h2>Seus dados</h2>
+                        <p>Preencha para agendar sua participação</p>
+
+                        <form class="cadastro-sessao">
+                            <label for="nomeCadastro">Nome *</label>
+                            <input id="nomeCadastro" name="nome" type="text" placeholder="Digite seu nome completo"
+                                autocomplete="name" maxlength="120" required>
+
+                            <label for="setorCadastro">Setor onde você trabalha *</label>
+                            <input id="setorCadastro" name="setor" type="text" placeholder="Ex: Setin"
+                                autocomplete="organization" maxlength="80" required>
+
+                            <div class="resumo">
+                                <div class="title-resumo"></div>
+                                <div class="resum-eventos" id="resumoGeral"></div>
+                            </div>
+
+                            <button id="enviarCadastro" class="enviar-form" type="submit" disabled>
+                                Confirmar agendamento
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

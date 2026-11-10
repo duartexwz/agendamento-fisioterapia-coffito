@@ -1,0 +1,7 @@
+node_modules
+__tests__
+coverage
+.git
+.gitignore
+npm-debug.log
+dados.json

@@ -21,7 +21,7 @@ services:
     image: front_agendamento
     container_name: container_agendamento_front
     ports:
-      - "3065:80"
+      - "8065:65"
     depends_on:
       - api
     restart: unless-stopped

@@ -20,12 +20,12 @@ let mockDatabase = { usuarios: [] };
 
 jest.unstable_mockModule('fs/promises', () => ({
     default: {
-        readFile: jest.fn(async () => JSON.stringify(mockDatabase)),
+        readFile: jest.fn(async () => JSON.stringify(mockDatabase)), mkdir: jest.fn(async () => {}),
         writeFile: jest.fn(async (caminho, dadosString) => {
             mockDatabase = JSON.parse(dadosString);
         }),
     },
-    readFile: jest.fn(async () => JSON.stringify(mockDatabase)),
+    readFile: jest.fn(async () => JSON.stringify(mockDatabase)), mkdir: jest.fn(async () => {}),
     writeFile: jest.fn(async (caminho, dadosString) => {
         mockDatabase = JSON.parse(dadosString);
     }),

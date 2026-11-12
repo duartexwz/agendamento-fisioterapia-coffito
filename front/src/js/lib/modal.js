@@ -17,7 +17,6 @@ function criarDialog() {
     <div class="app-modal-conteudo">
       <div class="app-modal-topo">
         <h3 class="app-modal-titulo"></h3>
-        <button type="button" class="fechar-dialog app-modal-fechar" aria-label="Fechar">×</button>
       </div>
       <p class="app-modal-mensagem"></p>
       <div class="app-modal-acoes"></div>
@@ -55,6 +54,7 @@ export function mostrarModal({
   const tituloEl = dialog.querySelector(".app-modal-titulo");
   const mensagemEl = dialog.querySelector(".app-modal-mensagem");
   const acoesEl = dialog.querySelector(".app-modal-acoes");
+  const btnFechar = dialog.querySelector('.app-modal-topo-button');
 
   tituloEl.textContent = titulo;
   mensagemEl.textContent = mensagem;

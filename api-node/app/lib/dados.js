@@ -12,7 +12,7 @@
  * Aqui também ficam os utilitários de senha (hash scrypt) e e-mail,
  * usados pelos services de autenticação e de administradores.
  */
-import fs from 'fs/promises';
+import * as fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'node:crypto'

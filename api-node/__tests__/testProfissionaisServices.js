@@ -12,12 +12,12 @@ let mockDatabase = { profissionais: [] };
 
 jest.unstable_mockModule('fs/promises', () => ({
     default: {
-        readFile: jest.fn(async () => JSON.stringify(mockDatabase)), // Para leitura, transforma em um JSON válido
+        readFile: jest.fn(async () => JSON.stringify(mockDatabase)), mkdir: jest.fn(async () => {}), // Para leitura, transforma em um JSON válido
         writeFile: jest.fn(async (caminho, dadosString) => {
             mockDatabase = JSON.parse(dadosString); // Para escrita, transforma em objeto.
         }),
     },
-    readFile: jest.fn(async () => JSON.stringify(mockDatabase)), // Para leitura, transforma em um JSON válido
+    readFile: jest.fn(async () => JSON.stringify(mockDatabase)), mkdir: jest.fn(async () => {}), // Para leitura, transforma em um JSON válido
         writeFile: jest.fn(async (caminho, dadosString) => {
             mockDatabase = JSON.parse(dadosString); // Para escrita, transforma em objeto.
         }),

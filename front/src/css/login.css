@@ -185,6 +185,22 @@ body {
   color: var(--text-tertiary);
 }
 
+.app-modal-acoes button{
+  border: none;
+  padding: 5px 10px;
+  background-color: var(--btn-primary);
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.app-modal-acoes button:hover{
+  background-color: var(--btn-primary-hover);
+  transform: scale(1.05);
+  transition: 0.3s all;
+}
+
 @media (max-width: 480px) {
   .login-card {
     padding: 32px 24px;

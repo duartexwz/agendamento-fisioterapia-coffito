@@ -12,6 +12,7 @@
  */
 
 // Reutiliza as mesmas funções de persistência/hash usadas pelos services.
+import { pathToFileURL } from 'node:url';
 import { lerDados, salvarDados } from './app/lib/dados.js';
 import { hashSenha, normalizarEmail, proximoId } from './app/lib/dados.js';
 
@@ -46,11 +47,39 @@ export async function criarAdminInicial() {
             dados.usuarios.push(novoAdmin);
             await salvarDados(dados);
 
-            console.log('✅ Seed: Administrador inicial criado com sucesso no arquivo JSON!');
+            console.log('✅ Seed: Administrador inicial criado com sucesso!');
         } else {
             console.log('⚡ Seed: Administrador inicial já existe. Nenhuma ação necessária.');
         }
     } catch (error) {
         console.error('❌ Erro ao rodar o seed de administrador:', error);
     }
+}
+
+/**
+ * Execução direta (`node seed.js` / `npm run seed`), usada localmente e
+ * pelo deploy na Vercel através do script `vercel-build`.
+ *
+ * Fora da Vercel tenta carregar o .env local para obter as variáveis
+ * ADMIN_*; dentro da Vercel as variáveis vêm do painel do projeto.
+ */
+const executadoDiretamente =
+    process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (executadoDiretamente) {
+    if (!process.env.VERCEL) {
+        for (const arquivoEnv of ['.env', '../.env']) {
+            try {
+                process.loadEnvFile(arquivoEnv);
+                break;
+            } catch (error) {
+                // .env ausente neste diretório: segue com o ambiente atual.
+            }
+        }
+    }
+
+    criarAdminInicial().catch((error) => {
+        console.error('❌ Erro ao executar o seed de administrador:', error);
+        process.exitCode = 1;
+    });
 }

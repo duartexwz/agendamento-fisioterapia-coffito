@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app/server.js",
+    "seed": "node ./seed.js",
     "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --runInBand"
   },
   "jest": {

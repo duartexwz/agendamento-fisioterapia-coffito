@@ -129,6 +129,20 @@ Credenciais padrão do painel:
 | PUT | `/api/v1/administrador/atualizar/:id` | Atualiza administrador (protegida) |
 | DELETE | `/api/v1/administrador/deletar/:id` | Exclui administrador (protegida) |
 
+## Persistência no Vercel (Vercel KV / Redis)
+
+Em produção na Vercel o sistema de arquivos é efêmero, então o `dados.json`
+não pode ser usado como banco. Quando as variáveis de ambiente do Vercel KV
+estiverem configuradas, a API passa a persistir todo o JSON no Redis:
+
+- `KV_REST_API_URL`
+- `KV_REST_API_TOKEN`
+
+Basta criar um banco Vercel KV (ou integração Upstash Redis) no projeto e
+conectar; as variáveis são injetadas automaticamente. Sem essas variáveis
+(o desenvolvimento local, Docker e testes), a API continua usando o arquivo
+JSON (`DATA_FILE`/`dados.json`).
+
 ## Testes
 
 ```bash

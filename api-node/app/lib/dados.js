@@ -16,6 +16,7 @@ import * as fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'node:crypto'
+import { kv } from '@vercel/kv'
 
 // Segredo usado para assinar tokens (reservado; authServices mantém sua
 // própria cópia lida da mesma variável de ambiente).
@@ -55,6 +56,21 @@ export const arquivoDadosPadrao = path.join(raizApi, 'dados.json');
 /** Arquivo efetivamente usado; sobrescrito pela variável de ambiente DATA_FILE. */
 export const arquivoDados = process.env.DATA_FILE || arquivoDadosPadrao;
 
+/** Chave usada no Vercel KV (Redis) para armazenar o JSON completo. */
+export const chaveDadosKv = process.env.KV_DATA_KEY || 'agendamento:dados';
+
+/**
+ * Indica se o armazenamento Vercel KV (Redis) está configurado.
+ * Quando as variáveis de ambiente KV_REST_API_URL e KV_REST_API_TOKEN
+ * estão presentes, a persistência deixa de usar o arquivo JSON e passa
+ * a usar o Redis (necessário no Vercel, onde o sistema de arquivos é
+ * efêmero). Caso contrário, mantém o comportamento baseado em arquivo
+ * (desenvolvimento local, Docker e testes).
+ */
+export function usarKv() {
+    return Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+}
+
 /** Estrutura mínima esperada do arquivo de dados. */
 function estruturaVazia() {
     return {
@@ -62,6 +78,21 @@ function estruturaVazia() {
         sessoes: [],
         participantes_sessoes: [],
         usuarios: [],
+    };
+}
+
+/**
+ * Normaliza um objeto de dados para a estrutura esperada, garantindo que
+ * todas as coleções sejam arrays. Usado tanto na leitura do KV quanto do
+ * arquivo, evitando estados inconsistentes.
+ */
+function normalizarDados(dados) {
+    const base = dados && typeof dados === 'object' && !Array.isArray(dados) ? dados : {};
+    return {
+        profissionais: Array.isArray(base.profissionais) ? base.profissionais : [],
+        sessoes: Array.isArray(base.sessoes) ? base.sessoes : [],
+        participantes_sessoes: Array.isArray(base.participantes_sessoes) ? base.participantes_sessoes : [],
+        usuarios: Array.isArray(base.usuarios) ? base.usuarios : [],
     };
 }
 
@@ -74,6 +105,26 @@ function estruturaVazia() {
  *   Dados carregados (ou estrutura vazia em caso de falha).
  */
 export async function lerDados() {
+    // Quando o Vercel KV (Redis) está configurado, a persistência passa
+    // a ser feita no Redis em vez do sistema de arquivos (efêmero na Vercel).
+    if (usarKv()) {
+        try {
+            let conteudo = await kv.get(chaveDadosKv);
+            if (conteudo == null) return estruturaVazia();
+            if (typeof conteudo === 'string') {
+                try {
+                    conteudo = JSON.parse(conteudo);
+                } catch (error) {
+                    return estruturaVazia();
+                }
+            }
+            return normalizarDados(conteudo);
+        } catch (error) {
+            console.error('Erro ao ler dados do Vercel KV:', error);
+            return estruturaVazia();
+        }
+    }
+
     let conteudo;
     try {
         conteudo = await fs.readFile(arquivoDados, 'utf-8');
@@ -91,14 +142,7 @@ export async function lerDados() {
 
     try {
         const dados = JSON.parse(conteudo);
-        return {
-            profissionais: Array.isArray(dados.profissionais) ? dados.profissionais : [],
-            sessoes: Array.isArray(dados.sessoes) ? dados.sessoes : [],
-            participantes_sessoes: Array.isArray(dados.participantes_sessoes)
-                ? dados.participantes_sessoes
-                : [],
-            usuarios: Array.isArray(dados.usuarios) ? dados.usuarios : [],
-        };
+        return normalizarDados(dados);
     } catch (error) {
         return estruturaVazia();
     }
@@ -112,6 +156,12 @@ export async function lerDados() {
  * @param {object} dados Objeto completo de dados já alterado em memória.
  */
 export async function salvarDados(dados) {
+    // Persistência no Vercel KV (Redis) quando configurado.
+    if (usarKv()) {
+        await kv.set(chaveDadosKv, dados);
+        return;
+    }
+
     await fs.mkdir(path.dirname(arquivoDados), { recursive: true });
     await fs.writeFile(arquivoDados, JSON.stringify(dados, null, 2), 'utf-8');
 }
